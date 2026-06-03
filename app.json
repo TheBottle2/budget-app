@@ -23,7 +23,9 @@
       },
       "package": "com.aslabulaman.budgetapp"
     },
-    "platforms": ["ios", "android"],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "plugins": [],
     "extra": {
       "eas": {
