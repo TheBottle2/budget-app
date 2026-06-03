@@ -12,8 +12,11 @@ export default function RegisterScreen({ navigation }) {
   const [sifre, setSifre] = useState('');
   const [yukleniyor, setYukleniyor] = useState(false);
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const kayitOlHandle = async () => {
     if (!ad || !email || !sifre) return Alert.alert('Hata', 'Tüm alanları doldurun!');
+    if (!emailRegex.test(email)) return Alert.alert('Hata', 'Geçerli bir e-posta girin!');
+    if (sifre.length < 8) return Alert.alert('Hata', 'Şifre en az 8 karakter olmalıdır!');
     try {
       setYukleniyor(true);
       await kayitOl(ad, email, sifre);
@@ -49,7 +52,7 @@ export default function RegisterScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Şifre (en az 6 karakter)"
+          placeholder="Şifre (en az 8 karakter, büyük/küçük harf, rakam, özel karakter)"
           placeholderTextColor="#999"
           value={sifre}
           onChangeText={setSifre}

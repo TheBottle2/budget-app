@@ -11,8 +11,10 @@ export default function LoginScreen({ navigation }) {
   const [sifre, setSifre]   = useState('');
   const [yukleniyor, setYukleniyor] = useState(false);
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const girisYapHandle = async () => {
     if (!email || !sifre) return Alert.alert('Hata', 'Tüm alanları doldurun!');
+    if (!emailRegex.test(email)) return Alert.alert('Hata', 'Geçerli bir e-posta girin!');
     try {
       setYukleniyor(true);
       await girisYap(email, sifre);

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import { authAPI } from '../api/client';
 
 const AuthContext = createContext(null);
@@ -12,9 +12,11 @@ export function AuthProvider({ children }) {
 
   const tokenKontrol = async () => {
     try {
-      const token         = await AsyncStorage.getItem('token');
-      const kullaniciData = await AsyncStorage.getItem('kullanici');
-      if (token && kullaniciData) setKullanici(JSON.parse(kullaniciData));
+      const token = await SecureStore.getItemAsync('auth_token');
+      const kullaniciData = await SecureStore.getItemAsync('kullanici');
+      if (token && kullaniciData) {
+        setKullanici(JSON.parse(kullaniciData));
+      }
     } catch (e) {
       console.error('Token kontrol hatası:', e);
     } finally {
@@ -24,21 +26,21 @@ export function AuthProvider({ children }) {
 
   const girisYap = async (email, sifre) => {
     const res = await authAPI.login({ email, sifre });
-    await AsyncStorage.setItem('token',     res.data.token);
-    await AsyncStorage.setItem('kullanici', JSON.stringify(res.data.kullanici));
+    await SecureStore.setItemAsync('auth_token', res.data.token);
+    await SecureStore.setItemAsync('kullanici', JSON.stringify(res.data.kullanici));
     setKullanici(res.data.kullanici);
   };
 
   const kayitOl = async (ad, email, sifre) => {
     const res = await authAPI.register({ ad, email, sifre });
-    await AsyncStorage.setItem('token',     res.data.token);
-    await AsyncStorage.setItem('kullanici', JSON.stringify(res.data.kullanici));
+    await SecureStore.setItemAsync('auth_token', res.data.token);
+    await SecureStore.setItemAsync('kullanici', JSON.stringify(res.data.kullanici));
     setKullanici(res.data.kullanici);
   };
 
   const cikisYap = async () => {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('kullanici');
+    await SecureStore.deleteItemAsync('auth_token');
+    await SecureStore.deleteItemAsync('kullanici');
     setKullanici(null);
   };
 
