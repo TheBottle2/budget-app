@@ -20,7 +20,7 @@ Budget App, kişisel bütçe takibi yapmanızı sağlayan React Native (Expo) mo
 | Navigasyon | React Navigation (Stack + Bottom Tabs) |
 | HTTP İstekleri | Axios |
 | Grafikler | react-native-chart-kit |
-| Yerel Depolama | AsyncStorage (token) |
+| Yerel Depolama | expo-secure-store (token) |
 
 ---
 
@@ -104,7 +104,7 @@ Budget App is a React Native (Expo) mobile application for personal budget track
 | Navigation | React Navigation (Stack + Bottom Tabs) |
 | HTTP Client | Axios |
 | Charts | react-native-chart-kit |
-| Local Storage | AsyncStorage (token) |
+| Local Storage | expo-secure-store (token) |
 
 ---
 

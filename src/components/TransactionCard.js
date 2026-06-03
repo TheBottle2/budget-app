@@ -23,7 +23,7 @@ export default function TransactionCard({ item, onPress, onLongPress }) {
         </View>
         <View style={styles.bilgi}>
           <Text style={styles.baslik} numberOfLines={1}>{item.ad}</Text>
-          <Text style={styles.alt}>{item.kategori} • {item.tarih}</Text>
+          <Text style={styles.alt}>{item.kategori} • {item.tarih ? new Date(item.tarih).toLocaleDateString('tr-TR') : ''}</Text>
         </View>
       </View>
       <Text style={[styles.tutar, { color: isGelir ? '#2ECC71' : '#E74C3C' }]}>

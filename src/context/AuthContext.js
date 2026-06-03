@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { authAPI } from '../api/client';
+import { authAPI, setOnAuthFailure } from '../api/client';
 
 const AuthContext = createContext(null);
 
@@ -8,7 +8,10 @@ export function AuthProvider({ children }) {
   const [kullanici, setKullanici] = useState(null);
   const [yukleniyor, setYukleniyor] = useState(true);
 
-  useEffect(() => { tokenKontrol(); }, []);
+  useEffect(() => {
+    tokenKontrol();
+    setOnAuthFailure(() => cikisYap);
+  }, []);
 
   const tokenKontrol = async () => {
     try {
@@ -39,8 +42,13 @@ export function AuthProvider({ children }) {
   };
 
   const cikisYap = async () => {
-    await SecureStore.deleteItemAsync('auth_token');
-    await SecureStore.deleteItemAsync('kullanici');
+    try {
+      await authAPI.logout();
+    } catch {}
+    try {
+      await SecureStore.deleteItemAsync('auth_token');
+      await SecureStore.deleteItemAsync('kullanici');
+    } catch {}
     setKullanici(null);
   };
 
@@ -51,4 +59,8 @@ export function AuthProvider({ children }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  return context;
+};

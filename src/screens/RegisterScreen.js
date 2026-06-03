@@ -5,18 +5,22 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SIFRE_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/;
+
 export default function RegisterScreen({ navigation }) {
   const { kayitOl } = useAuth();
-  const [ad, setAd]       = useState('');
+  const [ad, setAd] = useState('');
   const [email, setEmail] = useState('');
   const [sifre, setSifre] = useState('');
   const [yukleniyor, setYukleniyor] = useState(false);
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const kayitOlHandle = async () => {
     if (!ad || !email || !sifre) return Alert.alert('Hata', 'Tüm alanları doldurun!');
-    if (!emailRegex.test(email)) return Alert.alert('Hata', 'Geçerli bir e-posta girin!');
+    if (!EMAIL_REGEX.test(email)) return Alert.alert('Hata', 'Geçerli bir e-posta girin!');
     if (sifre.length < 8) return Alert.alert('Hata', 'Şifre en az 8 karakter olmalıdır!');
+    if (!SIFRE_REGEX.test(sifre)) return Alert.alert('Hata', 'Şifre: büyük harf, küçük harf, rakam ve özel karakter içermelidir!');
+
     try {
       setYukleniyor(true);
       await kayitOl(ad, email, sifre);
@@ -72,11 +76,11 @@ export default function RegisterScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container:  { flex: 1, backgroundColor: '#F0F0F7' },
-  icerik:     { flex: 1, justifyContent: 'center', padding: 24 },
-  baslik:     { fontSize: 28, fontWeight: 'bold', color: '#6C63FF', textAlign: 'center', marginBottom: 8 },
-  altBaslik:  { fontSize: 16, color: '#999', textAlign: 'center', marginBottom: 32 },
-  input:      {
+  container: { flex: 1, backgroundColor: '#F0F0F7' },
+  icerik: { flex: 1, justifyContent: 'center', padding: 24 },
+  baslik: { fontSize: 28, fontWeight: 'bold', color: '#6C63FF', textAlign: 'center', marginBottom: 8 },
+  altBaslik: { fontSize: 16, color: '#999', textAlign: 'center', marginBottom: 32 },
+  input: {
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 14,
@@ -85,10 +89,13 @@ const styles = StyleSheet.create({
     elevation: 2,
     color: '#333',
   },
-  btn:        {
-    backgroundColor: '#6C63FF', borderRadius: 12,
-    padding: 16, alignItems: 'center', marginBottom: 16,
+  btn: {
+    backgroundColor: '#6C63FF',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  btnText:    { color: '#fff', fontSize: 17, fontWeight: 'bold' },
-  linkText:   { color: '#6C63FF', textAlign: 'center', fontSize: 15 },
+  btnText: { color: '#fff', fontSize: 17, fontWeight: 'bold' },
+  linkText: { color: '#6C63FF', textAlign: 'center', fontSize: 15 },
 });

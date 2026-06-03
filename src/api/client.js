@@ -8,21 +8,23 @@ const getBaseURL = () => {
   }
   const productionURL = Constants.expoConfig?.extra?.API_URL;
   if (productionURL) return productionURL;
-  if (__DEV__) {
-    return 'http://192.168.1.100:3000/api';
-  }
   throw new Error('API_URL tanımlı değil! app.json extra alanını kontrol et.');
 };
 
 const client = axios.create({
-  baseURL: getBaseURL(),
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
 
+let onAuthFailure = null;
+export function setOnAuthFailure(callback) {
+  onAuthFailure = callback;
+}
+
 client.interceptors.request.use(
   async (config) => {
     try {
+      if (!config.baseURL) config.baseURL = getBaseURL();
       const token = await SecureStore.getItemAsync('auth_token');
       if (token) config.headers.Authorization = `Bearer ${token}`;
     } catch (e) {
@@ -37,8 +39,11 @@ client.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      await SecureStore.deleteItemAsync('auth_token');
-      await SecureStore.deleteItemAsync('kullanici');
+      try {
+        await SecureStore.deleteItemAsync('auth_token');
+        await SecureStore.deleteItemAsync('kullanici');
+      } catch {}
+      if (onAuthFailure) onAuthFailure();
     }
     return Promise.reject(error);
   }
