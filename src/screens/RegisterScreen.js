@@ -25,7 +25,8 @@ export default function RegisterScreen({ navigation }) {
       setYukleniyor(true);
       await kayitOl(ad, email, sifre);
     } catch (e) {
-      const mesaj = e.response?.data?.mesaj || e.response?.data?.hatalar?.[0]?.message || 'Kayıt başarısız!';
+      console.log('[RegisterScreen] Hata:', e);
+      const mesaj = e.response?.data?.mesaj || e.response?.data?.hatalar?.[0]?.message || e.message || 'Kayıt başarısız!';
       Alert.alert('Hata', mesaj);
     } finally {
       setYukleniyor(false);

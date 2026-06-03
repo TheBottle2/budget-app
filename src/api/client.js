@@ -3,6 +3,9 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
 const getBaseURL = () => {
+  if (typeof window !== 'undefined' && window.location?.hostname) {
+    return `http://${window.location.hostname}:3000/api`;
+  }
   if (Constants.expoConfig?.hostUri) {
     return `http://${Constants.expoConfig.hostUri.split(':')[0]}:3000/api`;
   }
