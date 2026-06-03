@@ -2,10 +2,26 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
+const isWeb = typeof window !== 'undefined';
+
+const secureStorage = {
+  async getItem(key) {
+    if (isWeb) return localStorage.getItem(key);
+    return SecureStore.getItemAsync(key);
+  },
+  async setItem(key, value) {
+    if (isWeb) return localStorage.setItem(key, value);
+    return SecureStore.setItemAsync(key, value);
+  },
+  async deleteItem(key) {
+    if (isWeb) return localStorage.removeItem(key);
+    return SecureStore.deleteItemAsync(key);
+  },
+};
+
 const getBaseURL = () => {
   console.log('[getBaseURL] Checking URL...');
   console.log('[getBaseURL] window.location:', typeof window !== 'undefined' ? window.location : 'not defined');
-  console.log('[getBaseURL] Constants:', Constants);
 
   if (typeof window !== 'undefined' && window.location?.hostname) {
     const url = `http://${window.location.hostname}:3000/api`;
@@ -13,13 +29,13 @@ const getBaseURL = () => {
     return url;
   }
 
-  if (Constants.expoConfig?.hostUri) {
+  if (Constants?.expoConfig?.hostUri) {
     const url = `http://${Constants.expoConfig.hostUri.split(':')[0]}:3000/api`;
     console.log('[getBaseURL] Using expo hostUri URL:', url);
     return url;
   }
 
-  const productionURL = Constants.expoConfig?.extra?.API_URL;
+  const productionURL = Constants?.expoConfig?.extra?.API_URL;
   if (productionURL) {
     console.log('[getBaseURL] Using productionURL:', productionURL);
     return productionURL;
@@ -47,7 +63,7 @@ client.interceptors.request.use(
       }
       console.log('[API Request]', config.method?.toUpperCase(), config.baseURL + config.url);
       console.log('[API Request] Data:', JSON.stringify(config.data));
-      const token = await SecureStore.getItemAsync('auth_token');
+      const token = await secureStorage.getItem('auth_token');
       if (token) {
         console.log('[API Request] Token found, adding Bearer');
         config.headers.Authorization = `Bearer ${token}`;
@@ -80,8 +96,8 @@ client.interceptors.response.use(
 
     if (error.response?.status === 401) {
       try {
-        await SecureStore.deleteItemAsync('auth_token');
-        await SecureStore.deleteItemAsync('kullanici');
+        await secureStorage.deleteItem('auth_token');
+        await secureStorage.deleteItem('kullanici');
       } catch {}
       if (onAuthFailure) onAuthFailure();
     }
