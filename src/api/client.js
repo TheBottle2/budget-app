@@ -3,19 +3,34 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
 const getBaseURL = () => {
+  console.log('[getBaseURL] Checking URL...');
+  console.log('[getBaseURL] window.location:', typeof window !== 'undefined' ? window.location : 'not defined');
+  console.log('[getBaseURL] Constants:', Constants);
+
   if (typeof window !== 'undefined' && window.location?.hostname) {
-    return `http://${window.location.hostname}:3000/api`;
+    const url = `http://${window.location.hostname}:3000/api`;
+    console.log('[getBaseURL] Using web URL:', url);
+    return url;
   }
+
   if (Constants.expoConfig?.hostUri) {
-    return `http://${Constants.expoConfig.hostUri.split(':')[0]}:3000/api`;
+    const url = `http://${Constants.expoConfig.hostUri.split(':')[0]}:3000/api`;
+    console.log('[getBaseURL] Using expo hostUri URL:', url);
+    return url;
   }
+
   const productionURL = Constants.expoConfig?.extra?.API_URL;
-  if (productionURL) return productionURL;
+  if (productionURL) {
+    console.log('[getBaseURL] Using productionURL:', productionURL);
+    return productionURL;
+  }
+
+  console.error('[getBaseURL] NO VALID URL FOUND!');
   throw new Error('API_URL tanımlı değil! app.json extra alanını kontrol et.');
 };
 
 const client = axios.create({
-  timeout: 10000,
+  timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -27,27 +42,42 @@ export function setOnAuthFailure(callback) {
 client.interceptors.request.use(
   async (config) => {
     try {
-      if (!config.baseURL) config.baseURL = getBaseURL();
+      if (!config.baseURL) {
+        config.baseURL = getBaseURL();
+      }
       console.log('[API Request]', config.method?.toUpperCase(), config.baseURL + config.url);
+      console.log('[API Request] Data:', JSON.stringify(config.data));
       const token = await SecureStore.getItemAsync('auth_token');
-      if (token) config.headers.Authorization = `Bearer ${token}`;
+      if (token) {
+        console.log('[API Request] Token found, adding Bearer');
+        config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        console.log('[API Request] No token found');
+      }
     } catch (e) {
-      console.error('Token alınamadı:', e);
+      console.error('[API Request] Error:', e);
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('[API Request Interceptor Error]', error);
+    return Promise.reject(error);
+  }
 );
 
 client.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('[API Response Success]', response.status, response.config.url);
+    return response;
+  },
   async (error) => {
-    console.log('[API Response Error]', {
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message,
-      config: error.config?.url,
-    });
+    console.error('[API Response Error]');
+    console.error('  URL:', error.config?.url);
+    console.error('  Status:', error.response?.status);
+    console.error('  Data:', JSON.stringify(error.response?.data));
+    console.error('  Message:', error.message);
+    console.error('  Full Error:', error);
+
     if (error.response?.status === 401) {
       try {
         await SecureStore.deleteItemAsync('auth_token');
@@ -60,7 +90,10 @@ client.interceptors.response.use(
 );
 
 export const authAPI = {
-  register: (data) => client.post('/auth/register', data),
+  register: (data) => {
+    console.log('[authAPI.register] Called with:', JSON.stringify({ ...data, sifre: '[HIDDEN]' }));
+    return client.post('/auth/register', data);
+  },
   login: (data) => client.post('/auth/login', data),
   logout: () => client.post('/auth/logout'),
 };
