@@ -28,6 +28,7 @@ client.interceptors.request.use(
   async (config) => {
     try {
       if (!config.baseURL) config.baseURL = getBaseURL();
+      console.log('[API Request]', config.method?.toUpperCase(), config.baseURL + config.url);
       const token = await SecureStore.getItemAsync('auth_token');
       if (token) config.headers.Authorization = `Bearer ${token}`;
     } catch (e) {
@@ -41,6 +42,12 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log('[API Response Error]', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+      config: error.config?.url,
+    });
     if (error.response?.status === 401) {
       try {
         await SecureStore.deleteItemAsync('auth_token');

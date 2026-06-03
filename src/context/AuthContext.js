@@ -35,13 +35,17 @@ export function AuthProvider({ children }) {
   };
 
   const kayitOl = async (ad, email, sifre) => {
+    console.log('[AuthContext] Kayıt isteği gönderiliyor...', { ad, email });
     try {
       const res = await authAPI.register({ ad, email, sifre });
+      console.log('[AuthContext] Kayıt başarılı, yanıt:', res.data);
       await SecureStore.setItemAsync('auth_token', res.data.token);
       await SecureStore.setItemAsync('kullanici', JSON.stringify(res.data.kullanici));
       setKullanici(res.data.kullanici);
     } catch (e) {
-      console.error('[AuthContext] Kayıt hatası:', e?.response?.data || e.message);
+      console.error('[AuthContext] Kayıt HATASI:', e?.message);
+      console.error('[AuthContext] Response:', e?.response?.data);
+      console.error('[AuthContext] Status:', e?.response?.status);
       throw e;
     }
   };
