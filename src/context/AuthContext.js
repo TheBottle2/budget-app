@@ -69,14 +69,22 @@ export function AuthProvider({ children }) {
   };
 
   const cikisYap = async () => {
+    console.log('[AuthContext] Çıkış yapılıyor...');
     try {
       await authAPI.logout();
-    } catch {}
+      console.log('[AuthContext] Logout API tamamlandı');
+    } catch (e) {
+      console.error('[AuthContext] Logout API hatası:', e);
+    }
     try {
       await storage.deleteItem('auth_token');
       await storage.deleteItem('kullanici');
-    } catch {}
+      console.log('[AuthContext] Storage temizlendi');
+    } catch (e) {
+      console.error('[AuthContext] Storage temizleme hatası:', e);
+    }
     setKullanici(null);
+    console.log('[AuthContext] Çıkış tamamlandı, kullanici null');
   };
 
   return (

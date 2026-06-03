@@ -70,7 +70,15 @@ export default function HomeScreen({ navigation }) {
   const cikisOnay = () => {
     Alert.alert('Çıkış', 'Çıkış yapmak istediğinize emin misiniz?', [
       { text: 'İptal', style: 'cancel' },
-      { text: 'Çıkış', style: 'destructive', onPress: cikisYap },
+      { text: 'Çıkış', style: 'destructive', onPress: async () => {
+        try {
+          await cikisYap();
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        } catch (e) {
+          console.error('Çıkış hatası:', e);
+          Alert.alert('Hata', 'Çıkış yapılamadı.');
+        }
+      }},
     ]);
   };
 
