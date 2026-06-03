@@ -45,10 +45,15 @@ export function AuthProvider({ children }) {
   };
 
   const girisYap = async (email, sifre) => {
-    const res = await authAPI.login({ email, sifre });
-    await storage.setItem('auth_token', res.data.token);
-    await storage.setItem('kullanici', JSON.stringify(res.data.kullanici));
-    setKullanici(res.data.kullanici);
+    try {
+      const res = await authAPI.login({ email, sifre });
+      await storage.setItem('auth_token', res.data.token);
+      await storage.setItem('kullanici', JSON.stringify(res.data.kullanici));
+      setKullanici(res.data.kullanici);
+    } catch (e) {
+      console.error('[AuthContext] Giriş hatası:', e?.response?.data || e.message);
+      throw e;
+    }
   };
 
   const kayitOl = async (ad, email, sifre) => {
