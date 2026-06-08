@@ -4,7 +4,7 @@ import { authAPI, setOnAuthFailure } from '../api/client';
 
 const AuthContext = createContext(null);
 
-const isWeb = typeof window !== 'undefined';
+const isWeb = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 
 const storage = {
   async getItem(key) {

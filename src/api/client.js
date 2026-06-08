@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
-const isWeb = typeof window !== 'undefined';
+const isWeb = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 
 const secureStorage = {
   async getItem(key) {
