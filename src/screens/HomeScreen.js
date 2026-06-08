@@ -136,7 +136,7 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F0F0F7' },
-  header: { backgroundColor: '#6C63FF', padding: 10, paddingTop: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  header: { backgroundColor: '#6C63FF', padding: 10, paddingTop: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   headerBaslik: { color: '#fff', fontSize: 17, fontWeight: 'bold' },
   cikisBtn: { color: '#fff', fontSize: 12, opacity: 0.8 },
   aySecici: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#6C63FF', paddingBottom: 10 },

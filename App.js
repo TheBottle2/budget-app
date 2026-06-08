@@ -49,7 +49,7 @@ function TabNavigator() {
       headerShown: false,
       tabBarActiveTintColor:   '#6C63FF',
       tabBarInactiveTintColor: '#999',
-      tabBarStyle:             { backgroundColor: '#fff', borderTopWidth: 0, elevation: 10, height: 60, paddingBottom: 8 },
+      tabBarStyle:             { backgroundColor: '#fff', borderTopWidth: 0, elevation: 10, height: 60, paddingBottom: 20, paddingTop: 4 },
       tabBarLabelStyle:        { fontSize: 12, fontWeight: '600' },
     }}>
       <Tab.Screen name="Home"    component={HomeStack}    options={{ title: 'Ana Sayfa', tabBarIcon: () => <Text style={{ fontSize: 22 }}>🏠</Text> }} />
