@@ -25,16 +25,16 @@ export default function SummaryBox({ gelir, gider, bakiye }) {
 }
 
 const styles = StyleSheet.create({
-  container:    { marginBottom: 16 },
-  altSatir:     { flexDirection: 'row', gap: 12 },
+  container:    { marginBottom: 12 },
+  altSatir:     { flexDirection: 'row', gap: 10 },
   kutu:         {
-    backgroundColor: '#fff', borderRadius: 16, padding: 16,
+    backgroundColor: '#fff', borderRadius: 14, padding: 12,
     elevation: 3, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 6,
   },
-  bakiyeKutu:   { marginBottom: 12, alignItems: 'center' },
-  bakiyeBaslik: { fontSize: 14, color: '#999', marginBottom: 4 },
-  bakiyeTutar:  { fontSize: 32, fontWeight: 'bold' },
+  bakiyeKutu:   { marginBottom: 10, alignItems: 'center' },
+  bakiyeBaslik: { fontSize: 12, color: '#999', marginBottom: 2 },
+  bakiyeTutar:  { fontSize: 28, fontWeight: 'bold' },
   yariKutu:     { flex: 1, alignItems: 'center' },
-  etiket:       { fontSize: 13, color: '#999', marginBottom: 4 },
-  tutar:        { fontSize: 20, fontWeight: 'bold' },
+  etiket:       { fontSize: 12, color: '#999', marginBottom: 2 },
+  tutar:        { fontSize: 18, fontWeight: 'bold' },
 });

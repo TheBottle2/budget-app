@@ -35,15 +35,15 @@ export default function TransactionCard({ item, onPress, onLongPress }) {
 
 const styles = StyleSheet.create({
   kart:     {
-    backgroundColor: '#fff', borderRadius: 14, padding: 14,
-    marginBottom: 10, flexDirection: 'row', alignItems: 'center',
+    backgroundColor: '#fff', borderRadius: 12, padding: 12,
+    marginBottom: 8, flexDirection: 'row', alignItems: 'center',
     justifyContent: 'space-between', elevation: 2,
   },
   sol:      { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  ikonKutu: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
-  ikon:     { fontSize: 22 },
+  ikonKutu: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginRight: 10 },
+  ikon:     { fontSize: 20 },
   bilgi:    { flex: 1 },
-  baslik:   { fontSize: 15, fontWeight: '600', color: '#333' },
-  alt:      { fontSize: 12, color: '#999', marginTop: 2 },
-  tutar:    { fontSize: 16, fontWeight: 'bold', marginLeft: 8 },
+  baslik:   { fontSize: 14, fontWeight: '600', color: '#333' },
+  alt:      { fontSize: 11, color: '#999', marginTop: 2 },
+  tutar:    { fontSize: 15, fontWeight: 'bold', marginLeft: 8 },
 });
